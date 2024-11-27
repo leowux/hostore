@@ -227,3 +227,75 @@ const increase = useEvent(() => {
   setCount((v) => v + 1);
 });
 ```
+
+### `<ComposeProviders providers />`
+
+用于优雅地组合多个 `Provider`，避免层层嵌套。
+
+```tsx
+const App = () => {
+  return (
+    // 组合多个 Provider
+    <ComposeProviders providers={[CounterStore.Provider, ToggleStore.Provider]}>
+      <Child />
+    </ComposeProviders>
+  );
+};
+```
+
+完整示例：
+
+```tsx
+import { useState } from "react";
+import ComposeProviders, { createStore, useEvent } from "./hostore";
+const CounterStore = createStore(() => {
+  const [count, setCount] = useState(0);
+  const increase = useEvent(() => {
+    setCount((v) => v + 1);
+  });
+  const decrease = useEvent(() => {
+    setCount((v) => v - 1);
+  });
+  return {
+    count,
+    increase,
+    decrease,
+  };
+});
+const ToggleStore = createStore(() => {
+  const [state, setState] = useState(false);
+  const toggle = useEvent(() => {
+    setState((v) => !v);
+  });
+  return {
+    toggle,
+    state,
+  };
+});
+const Child = () => {
+  const { count, increase, decrease } = CounterStore.useStore();
+  const { state, toggle } = ToggleStore.useStore();
+  return (
+    <>
+      <div>
+        <div>Count: {count}</div>
+        <button onClick={increase}>Increase</button>
+        <button onClick={decrease}>Decrease</button>
+      </div>
+      <div>
+        <div>State: {String(state)}</div>
+        <button onClick={toggle}>Toggle</button>
+      </div>
+    </>
+  );
+};
+const App = () => {
+  return (
+    // 组合多个 Provider
+    <ComposeProviders providers={[CounterStore.Provider, ToggleStore.Provider]}>
+      <Child />
+    </ComposeProviders>
+  );
+};
+export default App;
+```
