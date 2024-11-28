@@ -247,7 +247,7 @@ const App = () => {
 
 ```tsx
 import { useState } from "react";
-import { ComposeProviders, createStore, useEvent } from "./hostore";
+import { ComposeProviders, createStore, useEvent } from "hostore";
 const CounterStore = createStore(() => {
   const [count, setCount] = useState(0);
   const increase = useEvent(() => {
