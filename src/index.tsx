@@ -67,7 +67,7 @@ export function useEvent<Args extends unknown[], Return>(fn: (...args: Args) => 
   return useCallback((...args: Args) => ref.current(...args), []);
 }
 
-export default function ComposeProviders(props: {
+export function ComposeProviders(props: {
   providers: Array<React.JSXElementConstructor<React.PropsWithChildren<unknown>>>;
   children: React.ReactNode;
 }) {
