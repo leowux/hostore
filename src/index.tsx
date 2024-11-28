@@ -66,3 +66,17 @@ export function useEvent<Args extends unknown[], Return>(fn: (...args: Args) => 
   });
   return useCallback((...args: Args) => ref.current(...args), []);
 }
+
+export function ComposeProviders(props: {
+  providers: Array<React.JSXElementConstructor<React.PropsWithChildren<unknown>>>;
+  children: React.ReactNode;
+}) {
+  const { providers = [], children } = props;
+  return (
+    <>
+      {providers.reduceRight((acc, Provider) => {
+        return <Provider>{acc}</Provider>;
+      }, children)}
+    </>
+  );
+}

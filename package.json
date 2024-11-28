@@ -1,6 +1,6 @@
 {
   "name": "hostore",
-  "version": "0.0.12",
+  "version": "1.0.0",
   "description": "A state management library for React using context and hooks.",
   "main": "./dist/index.cjs.js",
   "module": "./dist/index.es.js",
