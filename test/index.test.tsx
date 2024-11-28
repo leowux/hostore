@@ -1,6 +1,6 @@
 import React, { render, fireEvent } from "@testing-library/react";
 import { useRef, useState } from "react";
-import { createStore, useEvent } from "../src";
+import { ComposeProviders, createStore, useEvent } from "../src";
 
 const CounterStore = createStore(({ initialCount = 0 }: { initialCount: number }) => {
   const [count, setCount] = useState(initialCount);
@@ -111,4 +111,55 @@ test("useEvent", () => {
   const { getByText } = render(<App />);
   fireEvent.click(getByText("Update"));
   expect(getByText("true")).toBeDefined();
+});
+
+test("ComposeProviders", () => {
+  const Store1 = createStore(() => {
+    const [count, setCount] = useState(0);
+    return {
+      count,
+      increase: useEvent(() => setCount((c) => c + 1)),
+    };
+  });
+
+  const Store2 = createStore(() => {
+    const [text, setText] = useState("");
+    return {
+      text,
+      setText: useEvent((value: string) => setText(value)),
+    };
+  });
+
+  const Child = () => {
+    const count = Store1.useStore((state) => state.count);
+    const text = Store2.useStore((state) => state.text);
+    const increase = Store1.useStore((state) => state.increase);
+    const setText = Store2.useStore((state) => state.setText);
+    return (
+      <div>
+        <span>Count: {count}</span>
+        <span>Text: {text}</span>
+        <button onClick={increase}>Increase</button>
+        <button onClick={() => setText("hello")}>Set Text</button>
+      </div>
+    );
+  };
+
+  const App = () => {
+    return (
+      <ComposeProviders providers={[Store1.Provider, Store2.Provider]}>
+        <Child />
+      </ComposeProviders>
+    );
+  };
+
+  const { getByText } = render(<App />);
+  expect(getByText("Count: 0")).toBeDefined();
+  expect(getByText("Text:")).toBeDefined();
+
+  fireEvent.click(getByText("Increase"));
+  expect(getByText("Count: 1")).toBeDefined();
+
+  fireEvent.click(getByText("Set Text"));
+  expect(getByText("Text: hello")).toBeDefined();
 });
