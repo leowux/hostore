@@ -7,9 +7,9 @@
 
 [English](README.md) | [简体中文](README.zh_CN.md)
 
-A simple and efficient state management solution for React hooks.
+简单、高效的 React hooks 状态管理方案。
 
-## Installation
+## 安装
 
 npm:
 
@@ -29,15 +29,15 @@ pnpm:
 pnpm i hostore
 ```
 
-## Examples
+## 示例
 
-### Basic Example
+### 基础示例
 
 ```tsx
 import { useState } from "react";
 import { createStore, useEvent } from "hostore";
 
-// Create Store
+// 创建 Store
 const CounterStore = createStore(() => {
   const [count, setCount] = useState(0);
   const increase = () => {
@@ -53,7 +53,7 @@ const CounterStore = createStore(() => {
   };
 });
 
-// Consume Store
+// 消费 Store
 const Child1 = () => {
   const { count } = CounterStore.useStore();
   return <div>{count}</div>;
@@ -67,7 +67,7 @@ const Child3 = () => {
   return <button onClick={decrease}>Decrease</button>;
 };
 
-// Provide Store
+// 提供 Store
 const App = () => {
   return (
     <CounterStore.Provider>
@@ -81,23 +81,23 @@ const App = () => {
 export default App;
 ```
 
-### Performance Optimization
+### 性能优化
 
-In the above example, due to the update mechanism of `React Context`, every time `count` is updated, all child components (`Child1`, `Child2`, `Child3`) will re-render. (The ideal situation is to only update `count` in `Child1`.)
+上述示例中，由于 `React Context` 的更新机制，导致每次 `count` 更新时，所有子组件（`Child1` `Child2` `Child3`）都会重新渲染。（理想情况是只更新 `count` 所在 `Child1`。）
 
-To solve the problem of repeated rendering of child components, `hostore` provides a 'selective update' feature: by passing a `selector` function to `useStore(selector)`, developers can choose the state they need. Only when the selected state is updated will the component re-render.
+为了解决上述子组件重复渲染的问题，`hostore` 提供「选择更新」功能：通过给 `useStore(selector)` 传递 `selector` 函数，开发者可以选择需要获取的状态。只有被选择的状态更新时，才会重新渲染该组件。
 
-At the same time, `hostore` also provides `useEvent` to replace `useCallback`, ensuring a 'constant function reference' without the need to pass a dependency array.
+同时，`hostore` 还提供 `useEvent` 用来代替 `useCallback` ，在不需要传依赖数组的前提下保证「函数引用的恒定」。
 
 ```tsx
-// Create Store
+// 创建 Store
 export const CounterStore = createStore(() => {
   const [count, setCount] = useState(0);
-  // Use useEvent to ensure the function reference does not change
+  // 使用 useEvent 保证函数引用不会改变
   const increase = useEvent(() => {
     setCount((v) => v + 1);
   });
-  // Use useEvent to ensure the function reference does not change
+  // 使用 useEvent 保证函数引用不会改变
   const decrease = useEvent(() => {
     setCount((v) => v - 1);
   });
@@ -108,17 +108,17 @@ export const CounterStore = createStore(() => {
   };
 });
 const Child1 = () => {
-  // Use selector function to select count property, and the component will re-render only when count changes.
+  // 使用 selector 函数选择 count 属性，当且仅当 count 变动时，组件重新渲染。
   const count = CounterStore.useStore((state) => state.count);
   return <div>{count}</div>;
 };
 const Child2 = () => {
-  // Use selector function to select increase property, and the component will re-render only when increase changes.
+  // 使用 selector 函数选择 increase 属性，当且仅当 increase 变动时，组件重新渲染。
   const increase = CounterStore.useStore((state) => state.increase);
   return <button onClick={increase}>Increase</button>;
 };
 const Child3 = () => {
-  // Use selector function to select decrease property, and the component will re-render only when decrease changes.
+  // 使用 selector 函数选择 decrease 属性，当且仅当 decrease 变动时，组件重新渲染。
   const decrease = CounterStore.useStore((state) => state.decrease);
   return <button onClick={decrease}>Decrease</button>;
 };
@@ -137,7 +137,7 @@ const App = () => {
 
 ### `createStore(useHook)`
 
-Pass a custom `Hook` to create a `Store` object.
+传入一个自定义 `Hook`，创建一个 `Store` 对象。
 
 ```tsx
 import { useState } from "react";
@@ -161,7 +161,7 @@ const CounterStore = createStore(() => {
 
 ### `<Store.Provider>`
 
-Provide `Store`.
+提供 `Store`。
 
 ```tsx
 const App = () => {
@@ -177,7 +177,7 @@ const App = () => {
 
 ### `<Store.Provider props>`
 
-Provide `Store` and set parameters `props`.
+提供 `Store`，并设置参数 `props`。
 
 ```tsx
 const CounterStore = createStore((props: { initialCount: number }) => {
@@ -198,7 +198,7 @@ const App = () => {
 
 ### `Store.useStore()`
 
-Consume `Store`. When the `Store` value changes, trigger component `rerender`.
+消费 `Store`。当 `Store` 的值变化，触发组件的 `rerender`。
 
 ```tsx
 const Child = () => {
@@ -209,22 +209,22 @@ const Child = () => {
 
 ### `Store.useStore(selector)`
 
-Consume `Store` and pass in `selector` selection function. The component will only trigger `rerender` when the selected value changes.
+消费 `Store`，并传入 `selector` 选择函数。只有当被选择的值发生变化时，才会触发组件的 `rerender`。
 
 ```tsx
 const Child = () => {
   const count = CounterStore.useStore((value) => value.count);
-  // The component will only re-render when the count value changes
+  // 当且仅当 count 值变化时，才会重新渲染组件
   return <div>{count}</div>;
 };
 ```
 
 ### `useEvent(callback)`
 
-Pass a function and return a constant function reference (a `useCallback` without `deps`). It can be used to avoid unnecessary re-renders caused by changes in function references, optimizing performance.
+传入一个函数，返回一个恒定的函数引用（不需要传 `deps` 的 `useCallback`）。可以用来避免函数引用变更造成的无效重复渲染，以优化性能。
 
 ```tsx
-// Return a constant function reference
+// 返回恒定的函数引用
 const increase = useEvent(() => {
   setCount((v) => v + 1);
 });
@@ -232,12 +232,12 @@ const increase = useEvent(() => {
 
 ### `<ComposeProviders providers />`
 
-Used to elegantly combine multiple `Provider`s to avoid nested structures.
+用于优雅地组合多个 `Provider`，避免层层嵌套。
 
 ```tsx
 const App = () => {
   return (
-    // Combine multiple Providers
+    // 组合多个 Provider
     <ComposeProviders providers={[CounterStore.Provider, ToggleStore.Provider]}>
       <Child />
     </ComposeProviders>
@@ -245,7 +245,7 @@ const App = () => {
 };
 ```
 
-Complete Example:
+完整示例：
 
 ```tsx
 import { useState } from "react";
@@ -293,7 +293,7 @@ const Child = () => {
 };
 const App = () => {
   return (
-    // Combine multiple Providers
+    // 组合多个 Provider
     <ComposeProviders providers={[CounterStore.Provider, ToggleStore.Provider]}>
       <Child />
     </ComposeProviders>
