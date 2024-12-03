@@ -35,7 +35,7 @@ pnpm i hostore
 
 ```tsx
 import { useState } from "react";
-import { createStore, useEvent } from "hostore";
+import { createStore } from "hostore";
 
 // 创建 Store
 const CounterStore = createStore(() => {
@@ -90,6 +90,9 @@ export default App;
 同时，`hostore` 还提供 `useEvent` 用来代替 `useCallback` ，在不需要传依赖数组的前提下保证「函数引用的恒定」。
 
 ```tsx
+import { useState } from "react";
+import { createStore, useEvent } from "hostore";
+
 // 创建 Store
 export const CounterStore = createStore(() => {
   const [count, setCount] = useState(0);
@@ -107,6 +110,7 @@ export const CounterStore = createStore(() => {
     decrease,
   };
 });
+
 const Child1 = () => {
   // 使用 selector 函数选择 count 属性，当且仅当 count 变动时，组件重新渲染。
   const count = CounterStore.useStore((state) => state.count);
@@ -122,6 +126,7 @@ const Child3 = () => {
   const decrease = CounterStore.useStore((state) => state.decrease);
   return <button onClick={decrease}>Decrease</button>;
 };
+
 const App = () => {
   return (
     <CounterStore.Provider>

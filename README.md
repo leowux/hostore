@@ -35,7 +35,7 @@ pnpm i hostore
 
 ```tsx
 import { useState } from "react";
-import { createStore, useEvent } from "hostore";
+import { createStore } from "hostore";
 
 // Create Store
 const CounterStore = createStore(() => {
@@ -90,6 +90,9 @@ To solve the problem of repeated rendering of child components, `hostore` provid
 At the same time, `hostore` also provides `useEvent` to replace `useCallback`, ensuring a 'constant function reference' without the need to pass a dependency array.
 
 ```tsx
+import { useState } from "react";
+import { createStore } from "hostore";
+
 // Create Store
 export const CounterStore = createStore(() => {
   const [count, setCount] = useState(0);
@@ -107,6 +110,7 @@ export const CounterStore = createStore(() => {
     decrease,
   };
 });
+
 const Child1 = () => {
   // Use selector function to select count property, and the component will re-render only when count changes.
   const count = CounterStore.useStore((state) => state.count);
@@ -122,6 +126,7 @@ const Child3 = () => {
   const decrease = CounterStore.useStore((state) => state.decrease);
   return <button onClick={decrease}>Decrease</button>;
 };
+
 const App = () => {
   return (
     <CounterStore.Provider>
