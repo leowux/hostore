@@ -33,6 +33,8 @@ pnpm i hostore
 
 ### 基础示例
 
+首先，使用 `createStore` 创建一个 `Store` 对象，并传入一个自定义 hook。
+
 ```tsx
 import { useState } from "react";
 import { createStore } from "hostore";
@@ -52,7 +54,27 @@ const CounterStore = createStore(() => {
     decrease,
   };
 });
+```
 
+然后，使用 `CounterStore.Provider` 包裹子组件。
+
+```tsx
+// 提供 Store
+const App = () => {
+  return (
+    <CounterStore.Provider>
+      <Child1 />
+      <Child2 />
+      <Child3 />
+    </CounterStore.Provider>
+  );
+};
+export default App;
+```
+
+最后，在子组件内使用 `Store.useStore` 获取自定义 hook 内的状态和方法。
+
+```tsx
 // 消费 Store
 const Child1 = () => {
   const { count } = CounterStore.useStore();
@@ -66,19 +88,6 @@ const Child3 = () => {
   const { decrease } = CounterStore.useStore();
   return <button onClick={decrease}>Decrease</button>;
 };
-
-// 提供 Store
-const App = () => {
-  return (
-    <CounterStore.Provider>
-      <Child1 />
-      <Child2 />
-      <Child3 />
-    </CounterStore.Provider>
-  );
-};
-
-export default App;
 ```
 
 ### 性能优化

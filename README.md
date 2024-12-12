@@ -33,11 +33,13 @@ pnpm i hostore
 
 ### Basic Example
 
+Firstly, create a `Store` by using `createStore`, passing a custom hook.
+
 ```tsx
 import { useState } from "react";
 import { createStore } from "hostore";
 
-// Create Store
+// Create a Store
 const CounterStore = createStore(() => {
   const [count, setCount] = useState(0);
   const increase = () => {
@@ -52,8 +54,28 @@ const CounterStore = createStore(() => {
     decrease,
   };
 });
+```
 
-// Consume Store
+Next, use the `CounterStore.Provider` to wrap child components.
+
+```tsx
+// Provide a Store
+const App = () => {
+  return (
+    <CounterStore.Provider>
+      <Child1 />
+      <Child2 />
+      <Child3 />
+    </CounterStore.Provider>
+  );
+};
+export default App;
+```
+
+Lastly, use `Store.useStore` in child components to get the custom hook's state and methods.
+
+```tsx
+// Consume a Store
 const Child1 = () => {
   const { count } = CounterStore.useStore();
   return <div>{count}</div>;
@@ -66,19 +88,6 @@ const Child3 = () => {
   const { decrease } = CounterStore.useStore();
   return <button onClick={decrease}>Decrease</button>;
 };
-
-// Provide Store
-const App = () => {
-  return (
-    <CounterStore.Provider>
-      <Child1 />
-      <Child2 />
-      <Child3 />
-    </CounterStore.Provider>
-  );
-};
-
-export default App;
 ```
 
 ### Performance Optimization
