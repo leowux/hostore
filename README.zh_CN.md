@@ -19,7 +19,7 @@ npm i hostore
 
 ### 基础示例
 
-首先，使用 `createStore` 创建一个 `Store` 对象，并传入一个自定义 hook。
+首先，使用 `createStore` 创建一个 `Store` 对象，传入一个自定义 hook。
 
 ```tsx
 import { useState } from "react";
