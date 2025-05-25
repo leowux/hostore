@@ -11,22 +11,8 @@ A simple and efficient state management solution for React hooks.
 
 ## Installation
 
-npm:
-
 ```bash
-npm i hostore
-```
-
-yarn:
-
-```bash
-yarn add hostore
-```
-
-pnpm:
-
-```bash
-pnpm i hostore
+npm install hostore
 ```
 
 ## Examples
