@@ -11,22 +11,8 @@
 
 ## 安装
 
-npm:
-
 ```bash
 npm i hostore
-```
-
-yarn:
-
-```bash
-yarn add hostore
-```
-
-pnpm:
-
-```bash
-pnpm i hostore
 ```
 
 ## 示例
