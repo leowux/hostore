@@ -58,7 +58,7 @@ const App = () => {
 export default App;
 ```
 
-Lastly, use `Store.useStore` in child components to get the custom hook's state and methods.
+Lastly, use `Store.useStore` in child components to get the custom hook's states and methods.
 
 ```tsx
 // Consume a Store
